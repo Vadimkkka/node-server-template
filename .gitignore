@@ -4,3 +4,4 @@ node_modules
 *.log
 .env
 coverage
+docs/swagger/output.json
