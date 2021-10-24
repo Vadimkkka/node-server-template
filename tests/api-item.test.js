@@ -1,17 +1,16 @@
-const { server } = global
+const { server, prismaMock } = global
 const baseUrl = '/api/v1/test/item'
 
 describe('GET', () => {
-  let items = []
   it(baseUrl, async () => {
     const res = await server.get(baseUrl).expect(200)
     expect(Array.isArray(res.body)).toBeTruthy()
-    expect(res.body.length).toBe(2)
-    items = res.body
+    expect(res.body.length).toBe(4)
   })
 
   it(`${baseUrl}/:id`, async () => {
-    const res = await server.get(`${baseUrl}/0`).expect(200)
+    const { body: items } = await server.get(baseUrl).expect(200)
+    const res = await server.get(`${baseUrl}/${items[0].id}`).expect(200)
     expect(res.body).toEqual(items[0])
   })
 
@@ -27,11 +26,12 @@ describe('GET', () => {
 })
 
 describe('CREATE', () => {
-  const newItem = { name: 'create', type: 'create type', price: 777 }
+  const newItem = { name: 'create', type: 'Book', count: 777, price: 777 }
 
   it(baseUrl, async () => {
     const resCreate = await server.post(baseUrl).send(newItem).expect(201)
     expect(resCreate.body).toHaveProperty('id')
+    newItem.id = resCreate.body.id
 
     const resGet = await server.get(`${baseUrl}/${resCreate.body.id}`).expect(200)
     expect(resGet.body).toEqual(newItem)
@@ -50,11 +50,13 @@ describe('CREATE', () => {
 })
 
 describe('UPDATE', () => {
-  const newItem = { name: 'update', type: 'update type', price: 777 }
+  const newItem = { name: 'update', type: 'Book', count: 777, price: 777 }
 
-  it(`${baseUrl}/0`, async () => {
-    await server.put(`${baseUrl}/0`).send(newItem).expect(200)
-    const resGet = await server.get(`${baseUrl}/0`).expect(200)
+  it(`${baseUrl}/:id`, async () => {
+    const { body: items } = await server.get(baseUrl).expect(200)
+    await server.put(`${baseUrl}/${items[0].id}`).send(newItem).expect(201)
+    newItem.id = items[0].id
+    const resGet = await server.get(`${baseUrl}/${items[0].id}`).expect(200)
     expect(resGet.body).toEqual(newItem)
   })
 
@@ -68,24 +70,19 @@ describe('UPDATE', () => {
     expect(resUpdate.body).toHaveProperty('error')
   })
 
-  it(`${baseUrl}/0 - wrong params`, async () => {
-    delete newItem.name
-    const resUpdate = await server.put(`${baseUrl}/0`).send(newItem).expect(400)
-    expect(resUpdate.body).toHaveProperty('error')
-  })
-
-  it(`${baseUrl}/0 - empty body`, async () => {
-    const resUpdate = await server.put(`${baseUrl}/0`).send().expect(400)
+  it(`${baseUrl}/:id - empty body`, async () => {
+    const { body: items } = await server.get(baseUrl).expect(200)
+    const resUpdate = await server.put(`${baseUrl}/${items[0].id}`).send().expect(400)
     expect(resUpdate.body).toHaveProperty('error')
   })
 })
 
 describe('DELETE', () => {
   it(`${baseUrl}/:id`, async () => {
-    const { body: item } = await server.get(`${baseUrl}/0`).expect(200)
+    const { body: items } = await server.get(baseUrl).expect(200)
 
-    const resDelete = await server.delete(`${baseUrl}/0`).expect(200)
-    expect(resDelete.body).toEqual(item)
+    const resDelete = await server.delete(`${baseUrl}/${items[0].id}`).expect(200)
+    expect(resDelete.body).toEqual(items[0])
   })
 
   it(`${baseUrl}/wtf`, async () => {

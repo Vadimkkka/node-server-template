@@ -1,34 +1,39 @@
-import items from './items.js'
+import { client as db, errors } from '../../../prisma/client.js'
 
-function parseItem({ name, type, price }) {
-  if (name && type && price) {
-    return { name, type, price }
-  }
-  return false
+const Items = db.item
+
+async function getItemList(req, res) {
+  const items = await Items.findMany()
+  res.status(200).json(items)
+  /*
+    #swagger.tags = ['Item']
+    #swagger.summary = 'Get item list'
+    #swagger.responses[200] = {
+      description: 'Responce array of items',
+      schema: { $ref: "#/definitions/ItemList" }
+    }
+  */
 }
 
-function getItem(req, res) {
-  if (req.params.id === undefined) {
-    res.status(200).json(items)
+async function getItem(req, res) {
+  const id = Number(req.params.id)
+  if (isNaN(id)) {
+    res.status(403).json({ error: 'Item id must be an integer' })
   } else {
-    const id = Number(req.params.id)
-    if (isNaN(id)) {
-      res.status(403).json({ error: 'Item id must be an integer' })
-    } else if (items[id] === undefined) {
+    const item = await Items.findUnique({
+      where: { id }
+    })
+    if (item === null) {
       res.status(404).json({ error: `Not found item by id - ${id}` })
     } else {
-      res.status(200).json(items[id])
+      res.status(200).json(item)
     }
   }
-  /*  
+  /*
     #swagger.tags = ['Item']
-    #swagger.summary = 'Get items or item by id'
-    #swagger.parameters['id'] = { 
-      required: false,
-      description: 'Item ID',
-    } 
+    #swagger.summary = 'Get item by id'
     #swagger.responses[200] = {
-      description: 'Responce item or array of items',
+      description: 'Responce item',
       schema: { $ref: "#/definitions/Item" }
     }
     #swagger.responses[403] = {
@@ -42,26 +47,25 @@ function getItem(req, res) {
   */
 }
 
-function createItem(req, res) {
-  const item = parseItem(req.body)
-  if (item) {
-    items.push(item)
-    res.status(201).json({ id: items.length - 1 })
-  } else {
+async function createItem(req, res) {
+  try {
+    const result = await Items.create({ data: req.body })
+    res.status(201).json(result)
+  } catch {
     res.status(400).json({ error: 'Wrong item parameters' })
   }
-  /*  
+  /*
     #swagger.tags = ['Item']
     #swagger.summary = 'Create item'
-    #swagger.parameters['item'] = { 
+    #swagger.parameters['item'] = {
       in: 'body',
       type: 'object',
       description: 'Item object',
       schema: { $ref: "#/definitions/Item" }
-    } 
+    }
     #swagger.responses[201] = {
       description: 'Created',
-      schema: { id: 333 }
+      schema: { $ref: "#/definitions/ItemCreated" }
     }
     #swagger.responses[400] = {
       description: 'Bad Request',
@@ -70,33 +74,35 @@ function createItem(req, res) {
   */
 }
 
-function updateItem(req, res) {
+async function updateItem(req, res) {
   const id = Number(req.params.id)
   if (isNaN(id)) {
     res.status(403).json({ error: 'Item id must be an integer' })
-  } else if (items[id] === undefined) {
-    res.status(404).json({ error: `Not found item by id - ${id}` })
   } else {
-    const item = parseItem(req.body)
-    if (item) {
-      items.splice(id, 1, item)
-      res.sendStatus(200)
-    } else {
-      res.status(400).json({ error: 'Wrong item parameters' })
+    try {
+      const { name, type, count, price } = req.body
+      const result = await Items.update({ where: { id }, data: { name, type, count: +count, price: +price } })
+      res.status(201).json(result)
+    } catch (error) {
+      if (error instanceof errors.know) {
+        res.status(404).json({ error: `Not found item by id - ${id}` })
+      } else {
+        res.status(400).json({ error: 'Wrong item parameters' })
+      }
     }
   }
-  /*  
+  /*
     #swagger.tags = ['Item']
     #swagger.summary = 'Update item by id'
-    #swagger.parameters['id'] = { 
+    #swagger.parameters['id'] = {
       description: 'Item ID',
-    } 
-    #swagger.parameters['item'] = { 
+    }
+    #swagger.parameters['item'] = {
       in: 'body',
       type: 'object',
       description: 'New item data',
       schema: { $ref: "#/definitions/Item" }
-    } 
+    }
     #swagger.responses[200] = {
       description: 'OK'
     }
@@ -115,22 +121,24 @@ function updateItem(req, res) {
   */
 }
 
-function deleteItem(req, res) {
+async function deleteItem(req, res) {
   const id = Number(req.params.id)
   if (isNaN(id)) {
     res.status(403).json({ error: 'Item id must be an integer' })
-  } else if (items[id] === undefined) {
-    res.status(404).json({ error: `Not found item by id - ${id}` })
   } else {
-    const [item] = items.splice(id, 1)
-    res.status(200).json(item)
+    try {
+      const result = await Items.delete({ where: { id } })
+      res.status(200).json(result)
+    } catch {
+      res.status(404).json({ error: `Not found item by id - ${id}` })
+    }
   }
-  /*  
+  /*
     #swagger.tags = ['Item']
     #swagger.summary = 'Delete item by id'
-    #swagger.parameters['id'] = { 
+    #swagger.parameters['id'] = {
       description: 'Item ID',
-    } 
+    }
     #swagger.responses[403] = {
       description: 'Error: Forbidden',
       schema: { $ref: "#/definitions/Item403" }
@@ -142,4 +150,4 @@ function deleteItem(req, res) {
   */
 }
 
-export { getItem, createItem, updateItem, deleteItem }
+export { getItemList, getItem, createItem, updateItem, deleteItem }
