@@ -4,7 +4,7 @@
 ![Node.js](https://img.shields.io/badge/-Node.js-24292F?style=for-the-badge&logo=Node.js&logoColor=339933)
 ![Express](https://img.shields.io/badge/-Express-24292F?style=for-the-badge&logo=Express)
 ![Prisma](https://img.shields.io/badge/-Prisma-24292F?style=for-the-badge&logo=Prisma&logoColor=85EA2D)
-![Jest](https://img.shields.io/badge/-Jest-2D3748?style=for-the-badge&logo=Jest&logoColor=C21325)
+![Jest](https://img.shields.io/badge/-Jest-24292F?style=for-the-badge&logo=Jest&logoColor=C21325)
 ![Swagger](https://img.shields.io/badge/-Swagger-24292F?style=for-the-badge&logo=Swagger&logoColor=85EA2D)
 
 Простой сервер на ```Express``` с тестами на ```Jest``` 👋
