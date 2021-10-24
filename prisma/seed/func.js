@@ -18,7 +18,7 @@ const itemData = [
     price: 129.99
   },
   {
-    name: 'iPhone 13 Pro',
+    name: 'iPhone Pro',
     type: 'Tech',
     count: 100,
     price: 879.99
