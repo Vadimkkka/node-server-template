@@ -49,7 +49,8 @@ async function getItem(req, res) {
 
 async function createItem(req, res) {
   try {
-    const result = await Items.create({ data: req.body })
+    const { name, type, count, price } = req.body
+    const result = await Items.create({ data: { name, type, count: +count, price: +price } })
     res.status(201).json(result)
   } catch {
     res.status(400).json({ error: 'Wrong item parameters' })
