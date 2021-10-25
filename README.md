@@ -57,6 +57,45 @@ $ npm run test-dev
 $ npm run test
 ```
 
+### 🐳 Docker
+
+.env.docker
+```console
+MYSQL_USERNAME=root
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=prisma
+// no
+MYSQL_LOCAL_PORT=3306
+MYSQL_DOCKER_PORT=3306
+NODE_LOCAL_PORT=3000
+NODE_DOCKER_PORT=3000
+```
+
+```console
+$ docker-compose --env-file .env.docker up --detach
+$ docker-compose start/stop
+// all - remove mysql image, 
+// local - only your images
+$ docker-compose down --rmi all/local -v
+
+// OR
+
+// Create image
+$ docker build . -t <tag>
+// Show images
+$ docker images
+// Run image
+$ docker run -p <port>:8080 -d <tag>
+// Show all containers
+$ docker ps
+// Show logs
+$ docker logs <container_id>
+// Go into container
+$ docker exec -it <container_id> /bin/bash
+// Test request
+$ curl -i localhost:<port>
+```
+
 ### 🗃 Работа с БД через ```Prisma```
 
 Миграция из ```prisma/schema.prisma``` в базу данных

@@ -2,7 +2,7 @@ node_modules
 .DS_Store
 *.local
 *.log
-.env
+.env*
 coverage
 docs/swagger/output.json
 prisma/migrations

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services: 
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+    ports:
+      - 3306:3306
+    volumes: 
+      - db-config:/etc/mysql
+      - db-data:/var/lib/mysql
+      - ./prisma/backup/files/:/data_backup/data
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    links:
+      - "db:localhost"
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+volumes: 
+  db-config:
+  db-data:
