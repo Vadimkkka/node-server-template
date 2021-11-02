@@ -95,3 +95,5 @@ $ npm run docs
 - [x] 🗃 Добавить работу с бд через ```prisma```
 - [ ] ✋ Добавить ```express-rate-limit``` и ```express-slow-down```
 - [ ] 🕯 Добавить ```express-redis-cache```
+- [ ] 📦 Модульные тесты
+- [x] 🧑‍💻 Интеграционные тесты
