@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-async function logger(params, next) {
+async function consoleLogger(params, next) {
   const before = Date.now()
   const result = await next(params)
   const after = Date.now()
@@ -8,4 +8,4 @@ async function logger(params, next) {
   return result
 }
 
-export default logger
+export default consoleLogger
