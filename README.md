@@ -136,7 +136,7 @@ $ npm run docs
 ```
 <img src="./docs/Preview-docs.png" alt="Preview docs" />
 
-### 🏋️‍♂️ TODO
+### 🏋️‍ TODO
 
 - [ ] 💅 Преобразить ```/public/index.html```
 - [ ] 💪 Добавить ```express-cluster``` + pm2
