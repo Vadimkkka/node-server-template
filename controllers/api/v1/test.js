@@ -16,10 +16,10 @@ async function getItemList(req, res) {
 }
 
 async function getItem(req, res) {
-  const id = Number(req.params.id)
-  if (isNaN(id)) {
+  if (isNaN(req.params.id)) {
     res.status(403).json({ error: 'Item id must be an integer' })
   } else {
+    const id = Number(req.params.id)
     const item = await Items.findUnique({
       where: { id }
     })
@@ -76,10 +76,10 @@ async function createItem(req, res) {
 }
 
 async function updateItem(req, res) {
-  const id = Number(req.params.id)
-  if (isNaN(id)) {
+  if (isNaN(req.params.id)) {
     res.status(403).json({ error: 'Item id must be an integer' })
   } else {
+    const id = Number(req.params.id)
     try {
       const { name, type, count, price } = req.body
       const result = await Items.update({ where: { id }, data: { name, type, count: +count, price: +price } })
@@ -123,10 +123,10 @@ async function updateItem(req, res) {
 }
 
 async function deleteItem(req, res) {
-  const id = Number(req.params.id)
-  if (isNaN(id)) {
+  if (isNaN(req.params.id)) {
     res.status(403).json({ error: 'Item id must be an integer' })
   } else {
+    const id = Number(req.params.id)
     try {
       const result = await Items.delete({ where: { id } })
       res.status(200).json(result)

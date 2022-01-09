@@ -6,6 +6,7 @@
 ![Prisma](https://img.shields.io/badge/-Prisma-24292F?style=for-the-badge&logo=Prisma&logoColor=85EA2D)
 ![Jest](https://img.shields.io/badge/-Jest-24292F?style=for-the-badge&logo=Jest&logoColor=C21325)
 ![Swagger](https://img.shields.io/badge/-Swagger-24292F?style=for-the-badge&logo=Swagger&logoColor=85EA2D)
+![Docker](https://img.shields.io/badge/-Docker-24292F?style=for-the-badge&logo=Docker&logoColor=2496ED)
 
 Простой сервер на ```Express``` с тестами на ```Jest``` 👋
 
@@ -57,6 +58,53 @@ $ npm run test-dev
 $ npm run test
 ```
 
+### 🐳 Docker
+
+docker/.env
+```console
+MYSQL_USERNAME=root
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=prisma
+```
+
+#### ✋ Change .env file in main dir
+```console
+DATABASE_URL="mysql://root:root@database:3306/prisma"
+```
+Основные команды 🔫
+```console
+// Создает и запускает контейнер
+$ docker-compose up --detach
+
+// Выполнить команду из контейнера
+$ docker exec -it <app_container_id> npx prisma db seed
+
+// Запустить/остановить контейнер
+$ docker-compose start/stop
+
+// Остановить контейнер и удалить образы
+$ docker-compose down --rmi all/local -v
+```
+
+<!-- Analog 👇
+
+```console
+// Create image
+$ docker build . -t <tag>
+// Show images
+$ docker images
+// Run image
+$ docker run -p <port>:8080 -d <tag>
+// Show all containers
+$ docker ps
+// Show logs
+$ docker logs <container_id>
+// Go into container
+$ docker exec -it <container_id> /bin/bash
+// Test request
+$ curl -i localhost:<port>
+``` -->
+
 ### 🗃 Работа с БД через ```Prisma```
 
 Миграция из ```prisma/schema.prisma``` в базу данных
@@ -68,7 +116,7 @@ $ npx prisma migrate dev --name init
 ```console
 $ npx prisma db pull
 // Обновить клиент для отправки запросов
-$ prisma generate
+$ npx prisma generate
 ```
 
 Визуальный редактор данных в вашей базе данных
@@ -93,8 +141,10 @@ $ npm run docs
 - [ ] 💅 Преобразить ```/public/index.html```
 - [ ] 💪 Добавить ```express-cluster``` + pm2
 - [x] 🗃 Добавить работу с бд через ```prisma```
+- [x] 🐳 Добавить ```docker```
 - [ ] ✋ Добавить ```express-rate-limit``` и ```express-slow-down```
 - [ ] 🕯 Добавить ```express-redis-cache```
+- [ ] 👅 Добавить локализацию [```i18n```](https://www.npmjs.com/package/i18n) 
 - [ ] 📦 Модульные тесты
 - [x] 🧑‍💻 Интеграционные тесты
 - [ ] ✍️ Добавить eslint

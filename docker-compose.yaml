@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    links:
+      - "db:database"
+    stdin_open: true
+    tty: true
+    networks:
+      - mysql_net
+
+  db:
+    image: mysql
+    restart: always
+    env_file: docker/.env
+    volumes:
+      - db-config:/etc/mysql
+      - db-data:/var/lib/mysql
+      - ./prisma/backup/files/:/data_backup/data
+    networks:
+      - mysql_net
+
+networks:
+  mysql_net:
+    driver: bridge
+
+volumes:
+  db-config: null
+  db-data: null
