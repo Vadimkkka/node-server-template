@@ -116,7 +116,7 @@ $ npx prisma migrate dev --name init
 ```console
 $ npx prisma db pull
 // Обновить клиент для отправки запросов
-$ prisma generate
+$ npx prisma generate
 ```
 
 Визуальный редактор данных в вашей базе данных
@@ -143,3 +143,4 @@ $ npm run docs
 - [x] 🗃 Добавить работу с бд через ```prisma```
 - [ ] ✋ Добавить ```express-rate-limit``` и ```express-slow-down```
 - [ ] 🕯 Добавить ```express-redis-cache```
+- [ ] 👅 Добавить локализацию [```i18n```](https://www.npmjs.com/package/i18n) 
