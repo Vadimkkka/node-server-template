@@ -6,6 +6,7 @@
 ![Prisma](https://img.shields.io/badge/-Prisma-24292F?style=for-the-badge&logo=Prisma&logoColor=85EA2D)
 ![Jest](https://img.shields.io/badge/-Jest-24292F?style=for-the-badge&logo=Jest&logoColor=C21325)
 ![Swagger](https://img.shields.io/badge/-Swagger-24292F?style=for-the-badge&logo=Swagger&logoColor=85EA2D)
+![Docker](https://img.shields.io/badge/-Docker-24292F?style=for-the-badge&logo=Docker&logoColor=2496ED)
 
 Простой сервер на ```Express``` с тестами на ```Jest``` 👋
 
@@ -59,27 +60,35 @@ $ npm run test
 
 ### 🐳 Docker
 
-.env.docker
+docker/.env
 ```console
 MYSQL_USERNAME=root
 MYSQL_ROOT_PASSWORD=root
 MYSQL_DATABASE=prisma
-// no
-MYSQL_LOCAL_PORT=3306
-MYSQL_DOCKER_PORT=3306
-NODE_LOCAL_PORT=3000
-NODE_DOCKER_PORT=3000
 ```
 
+#### ✋ Change .env file in main dir
 ```console
-$ docker-compose --env-file .env.docker up --detach
+DATABASE_URL="mysql://root:root@database:3306/prisma"
+```
+Основные команды 🔫
+```console
+// Создает и запускает контейнер
+$ docker-compose up --detach
+
+// Выполнить команду из контейнера
+$ docker exec -it <app_container_id> npx prisma db seed
+
+// Запустить/остановить контейнер
 $ docker-compose start/stop
-// all - remove mysql image, 
-// local - only your images
+
+// Остановить контейнер и удалить образы
 $ docker-compose down --rmi all/local -v
+```
 
-// OR
+<!-- Analog 👇
 
+```console
 // Create image
 $ docker build . -t <tag>
 // Show images
@@ -94,7 +103,7 @@ $ docker logs <container_id>
 $ docker exec -it <container_id> /bin/bash
 // Test request
 $ curl -i localhost:<port>
-```
+``` -->
 
 ### 🗃 Работа с БД через ```Prisma```
 

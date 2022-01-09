@@ -1,29 +1,34 @@
 version: '3.8'
 
-services: 
-  db:
-    image: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: $MYSQL_DATABASE
-    ports:
-      - 3306:3306
-    volumes: 
-      - db-config:/etc/mysql
-      - db-data:/var/lib/mysql
-      - ./prisma/backup/files/:/data_backup/data
+services:
   app:
     build: .
     ports:
       - 3000:3000
-    links:
-      - "db:localhost"
     depends_on:
       - db
+    links:
+      - "db:database"
     stdin_open: true
     tty: true
+    networks:
+      - mysql_net
 
-volumes: 
-  db-config:
-  db-data:
+  db:
+    image: mysql
+    restart: always
+    env_file: docker/.env
+    volumes:
+      - db-config:/etc/mysql
+      - db-data:/var/lib/mysql
+      - ./prisma/backup/files/:/data_backup/data
+    networks:
+      - mysql_net
+
+networks:
+  mysql_net:
+    driver: bridge
+
+volumes:
+  db-config: null
+  db-data: null

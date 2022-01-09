@@ -14,6 +14,6 @@ RUN npx prisma generate
 RUN npm run docs
 EXPOSE 3000
 
-ENTRYPOINT ["sh", "entrypoint.sh"]
+ENTRYPOINT ["sh", "docker/entrypoint.sh"]
 
 CMD [ "npm", "run", "start" ]
